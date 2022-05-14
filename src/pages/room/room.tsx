@@ -112,13 +112,14 @@ const Room = () => {
     if(stream==='LOADING'||!rid||!uid||!name)return;
     socketRef.current.emit('roomJoin',rid,uid,name);
     socketRef.current.on('userJoin',(userId:string,socketId:string,name:string)=>{
-      setRoomInfo(s=>[...s,{id:userId,sid:socketId,name,isTyping:false,isMuted:false,isPaused:false}])
+      // setRoomInfo(s=>[...s,{id:userId,sid:socketId,name,isTyping:false,isMuted:false,isPaused:false}])
     });
     socketRef.current.on("roomInfo", (users: Array<{
       name: string,
       id: string,
       sid: string,
     }>) => {
+      setRoomInfo(users.map(u=>{return {id:u.id,isMuted:false,isPaused:false,isTyping:false,name:u.name,sid:u.sid}}))
       users.forEach(u=>{
         if(peerRef.current.find(p=>p.socketId===u.sid))return;      
         const peer=createPeer(u.sid,socketRef.current.id,stream);
