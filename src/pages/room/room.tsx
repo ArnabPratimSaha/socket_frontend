@@ -63,7 +63,7 @@ const Room = () => {
   const [msgArray, setMsgArray] = useState<Array<{ id: string, msg: string }>>([]);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const divRef = useRef<HTMLDivElement | null>(null);
-  const socketRef = useRef<Socket<ServerToClientEvents, ClientToServerEvents>>(io(`http://192.168.0.106:5000`));
+  const socketRef = useRef<Socket<ServerToClientEvents, ClientToServerEvents>>(io(`${process.env.BACKEND||'http://192.168.0.106:5000'}`));
   const [stream]=useStream();
   const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io();
   const [src,setSrc]=useState<Array<{socketId:string,stream:MediaStream}>>([]);
