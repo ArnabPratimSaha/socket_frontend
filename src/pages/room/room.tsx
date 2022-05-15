@@ -158,6 +158,8 @@ const Room = () => {
     })
     peer.on('stream',async(stm)=>{
       toast(`stream from ${userSid}`);
+      console.log(stm);
+      
       setSrc(s=>[...s,{socketId:userSid,stream:stm}])
     })
     peer.signal(data);
