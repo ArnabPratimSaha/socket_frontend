@@ -126,7 +126,8 @@ const Room = () => {
       setRoomInfo(users.map(u=>{return {id:u.id,isMuted:false,isPaused:false,isTyping:false,name:u.name,sid:u.sid}}))
       users.forEach(u=>{
         // if(peerRef.current.find(p=>p.socketId===u.sid))return;
-        if(u.sid===socketRef.current.id)return;    
+        if(u.sid===socketRef.current.id)return;
+        toast(`sending 1 to ${u.sid}`);
         const peer=createPeer(u.sid,socketRef.current.id,stream);
         peerRef.current.push({socketId:u.sid,peer});
       })
@@ -156,6 +157,7 @@ const Room = () => {
       socketRef.current.emit('reciveCall',userSid,data);
     })
     peer.on('stream',async(stm)=>{
+      toast(`stream from ${userSid}`);
       setSrc(s=>[...s,{socketId:userSid,stream:stm}])
     })
     peer.signal(data);
@@ -223,6 +225,7 @@ const Room = () => {
       {/* .stream-control-button */}
       <div className="video-div" ref={divRef} >
         <video ref={videoRef}></video>
+        <p id='test'></p>
         {src.map((p,i)=>{
           const user=roomInfo.find(r=>r.sid===p.socketId);
           return <Video isMuted={false} isPaused={false} name={user?.id||'unknow_user'} key={i} socketId={p.socketId} userSid={socketRef.current.id} mediaStream={p.stream}></Video>})}
