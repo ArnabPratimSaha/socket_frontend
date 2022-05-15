@@ -159,7 +159,12 @@ const Room = () => {
     peer.on('stream',async(stm)=>{
       toast(`stream from ${userSid}`);
       console.log(stm);
-      
+      if(divRef.current){
+        const ele=document.createElement('video');
+        ele.srcObject=stm;
+        ele.play();
+        divRef.current.appendChild(ele);
+      }
       setSrc(s=>[...s,{socketId:userSid,stream:stm}])
     })
     peer.signal(data);
@@ -227,10 +232,10 @@ const Room = () => {
       {/* .stream-control-button */}
       <div className="video-div" ref={divRef} >
         <video ref={videoRef}></video>
-        <p id='test'></p>
+        {/* <p id='test'></p>
         {src.map((p,i)=>{
           const user=roomInfo.find(r=>r.sid===p.socketId);
-          return <Video isMuted={false} isPaused={false} name={user?.id||'unknow_user'} key={i} socketId={p.socketId} userSid={socketRef.current.id} mediaStream={p.stream}></Video>})}
+          return <Video isMuted={false} isPaused={false} name={user?.id||'unknow_user'} key={i} socketId={p.socketId} userSid={socketRef.current.id} mediaStream={p.stream}></Video>})} */}
       </div>
     </div>
   )
