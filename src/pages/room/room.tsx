@@ -109,6 +109,8 @@ const Room = () => {
   const reciverRef = useRef<Array<{socketId:string,peer:Peer.Instance}>>([]);
   useEffect(()=>{
     if(stream==='LOADING'||!rid||!uid||!name)return;
+    console.log(stream);
+    
     socketRef.current.emit('roomJoin',rid,uid,name);
     if(videoRef.current){
       videoRef.current.srcObject=stream;
