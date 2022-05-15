@@ -100,7 +100,6 @@ const Room = () => {
     });
     socketRef.current.on('userLeft',(userId:string,socketId:string)=>{
       setSrc(s=>s.filter(sr=>sr.socketId!==socketId));
-      setRoomInfo(r=>r.filter(ri=>ri.id!==userId))
     })
     return () => {
       socketRef.current.emit('roomLeave', uid, rid);
