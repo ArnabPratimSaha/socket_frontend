@@ -160,17 +160,22 @@ const Room = () => {
       socketRef.current.emit('reciveCall',userSid,data);
     })
     peer.on('stream',async(stm)=>{
-      toast(`stream from ${userSid}`);
-      console.log(stm);
-      if(divRef.current){
-        const ele=document.createElement('video');
-        ele.srcObject=stm;
-        ele.onloadedmetadata=((e)=>{
-          ele.play();
-        })
-        divRef.current.appendChild(ele);
+      try {
+        console.log(stm);
+        if(divRef.current){
+          const ele=document.createElement('video');
+          ele.srcObject=stm;
+          ele.onloadedmetadata=((e)=>{
+            ele.play();
+          })
+          divRef.current.appendChild(ele);
+        }
+        setSrc(s=>[...s,{socketId:userSid,stream:stm}])
+        
+      } catch (error) {
+        console.log('error');
+        
       }
-      setSrc(s=>[...s,{socketId:userSid,stream:stm}])
     })
     peer.signal(data);
     return peer;
