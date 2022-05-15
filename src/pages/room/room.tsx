@@ -129,7 +129,7 @@ const Room = () => {
       users.forEach(u=>{
         // if(peerRef.current.find(p=>p.socketId===u.sid))return;
         if(u.sid===socketRef.current.id)return;
-        toast(`sending 1 to ${u.sid}`);
+        
         const peer=createPeer(u.sid,socketRef.current.id,stream);
         peerRef.current.push({socketId:u.sid,peer});
       })
@@ -139,6 +139,7 @@ const Room = () => {
       reciverRef.current.push({peer,socketId:callerSid})
     })
     socketRef.current.on('reciveCallAccept',(callerSid:string,data:Peer.SignalData)=>{
+      toast(`connection established`);
       peerRef.current.forEach(p=>{
         if(p.socketId===callerSid){
           p.peer.signal(data)
@@ -163,7 +164,7 @@ const Room = () => {
       console.log(stm);
       if(divRef.current){
         const ele=document.createElement('video');
-        ele.srcObject=new MediaStream(stm);
+        ele.srcObject=stm;
         ele.onloadedmetadata=((e)=>{
           ele.play();
         })
