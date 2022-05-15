@@ -110,6 +110,11 @@ const Room = () => {
   useEffect(()=>{
     if(stream==='LOADING'||!rid||!uid||!name)return;
     socketRef.current.emit('roomJoin',rid,uid,name);
+    if(videoRef.current){
+      videoRef.current.srcObject=stream;
+      videoRef.current.muted=true;
+      videoRef.current.play();
+    }
     socketRef.current.on('userJoin',(userId:string,socketId:string,name:string)=>{
       // setRoomInfo(s=>[...s,{id:userId,sid:socketId,name,isTyping:false,isMuted:false,isPaused:false}])
     });
@@ -120,7 +125,8 @@ const Room = () => {
     }>) => {
       setRoomInfo(users.map(u=>{return {id:u.id,isMuted:false,isPaused:false,isTyping:false,name:u.name,sid:u.sid}}))
       users.forEach(u=>{
-        if(peerRef.current.find(p=>p.socketId===u.sid))return;      
+        // if(peerRef.current.find(p=>p.socketId===u.sid))return;
+        if(u.sid===socketRef.current.id)return;    
         const peer=createPeer(u.sid,socketRef.current.id,stream);
         peerRef.current.push({socketId:u.sid,peer});
       })
@@ -216,6 +222,7 @@ const Room = () => {
       </div>
       {/* .stream-control-button */}
       <div className="video-div" ref={divRef} >
+        <video ref={videoRef}></video>
         {src.map((p,i)=>{
           const user=roomInfo.find(r=>r.sid===p.socketId);
           return <Video isMuted={false} isPaused={false} name={user?.id||'unknow_user'} key={i} socketId={p.socketId} userSid={socketRef.current.id} mediaStream={p.stream}></Video>})}
