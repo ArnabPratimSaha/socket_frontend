@@ -161,8 +161,10 @@ const Room = () => {
       console.log(stm);
       if(divRef.current){
         const ele=document.createElement('video');
-        ele.srcObject=stm;
-        ele.play();
+        ele.srcObject=new MediaStream(stm);
+        ele.onloadedmetadata=((e)=>{
+          ele.play();
+        })
         divRef.current.appendChild(ele);
       }
       setSrc(s=>[...s,{socketId:userSid,stream:stm}])
